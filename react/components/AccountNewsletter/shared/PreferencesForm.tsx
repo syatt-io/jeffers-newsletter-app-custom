@@ -17,7 +17,8 @@ const PreferencesForm = ({handleChange, fields}:any) => {
     "form__inputContainer",
     "form__input",
     "form__inputLabel",
-    "form__selectPreferences"
+    "form__selectPreferences",
+    "preferences__saved"
   ] as const;
   const handles = useCssHandles(CSS_HANDLES)
 
@@ -202,6 +203,7 @@ const PreferencesForm = ({handleChange, fields}:any) => {
 
       <div className={handles.form__receiveNewsletter}>
         <RecieveNewsletter checked={fields.receiveNewsletter} onChange={handleChange} />
+        <p className={handles.preferences__saved}>*Your preferences will be saved once you mark them.</p>
       </div>
       </>
   )

@@ -1,0 +1,17 @@
+{
+  "newsletter-custom":{
+    "component": "NewsletterApp"
+  },
+  "preference-message":{
+    "component": "PreferenceMessage"
+  },
+  "email-signup":{
+    "component": "EmailSignup"
+  },
+  "my-account-page.newsletter-preferences": {
+    "component": "NewsletterPreferences"
+  },
+  "my-account-link.newsletter-preferences": {
+    "component": "LinkNewsletterPreferences"
+  }
+}

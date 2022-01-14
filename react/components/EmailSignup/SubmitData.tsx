@@ -4,7 +4,7 @@ import singupDataFields from '../AccountNewsletter/data/singupFields'
 import MessageSent from '../EmailSignup/MessageSent'
 import PreferencesForm from '../EmailSignup/PreferencesForm'
 
-import NEWSLETTER_INTEREST from '../../graphql/getNewsletterInterest.gql'
+import NEWSLETTER_INTEREST from '../../graphql/getNewsletterInterestEmail.gql'
 import UPDATE_NEWSLETTER_INTEREST from '../../graphql/setNewsletterInterest.gql'
 import CREATEDOCUMENT from '../../graphql/createDocument.gql'
 
@@ -40,6 +40,29 @@ const SubmitData = ({email}:any) => {
       }
     }
   }
+
+  useEffect(() => {
+    let documentIdNewsletter:any
+    if(typeof localStorage !== "undefined"){
+      try{
+          documentIdNewsletter = localStorage?.getItem('documentIdNewsletter');
+      }catch(error){
+          console.log("Error");
+      }
+
+      if(!documentIdNewsletter && id && id !== ""){
+        if(typeof localStorage !== "undefined"){
+          try{
+              localStorage?.setItem("documentIdNewsletter", id);
+          }catch(error){
+              console.log("** ", error);
+          }
+        }
+      }
+
+    }
+  }, [id])
+
 
   useEffect(() => {
     setFields({
@@ -217,7 +240,7 @@ const SubmitData = ({email}:any) => {
       }
     } else {
       try {
-        createDocument(
+        const returnValueCreateDocument = await createDocument(
           {
             variables: {
               acronym: 'NS',
@@ -368,6 +391,7 @@ const SubmitData = ({email}:any) => {
             }
           }
         )
+        setId(returnValueCreateDocument.data.createDocument.documentId)
         useShowMessage(true)
       } catch (e) {
         console.log('error', e)

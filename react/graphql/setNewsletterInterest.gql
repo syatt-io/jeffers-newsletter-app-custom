@@ -2,4 +2,4 @@ mutation UpdateNewsletterInterest($acronym: String!, $document: DocumentInput) {
   updateDocument(acronym: $acronym, document: $document) {
     id
   }
-}
+} 

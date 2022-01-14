@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { useQuery, useMutation } from "react-apollo";
+import { useLazyQuery, useQuery, useMutation } from "react-apollo";
 import { pathOr } from 'ramda'
 import ProfileLoading from '../loaders/ProfileLoading';
 import PreferencesForm from './PreferencesForm'
 
 import GET_PROFILE from '../../../graphql/getProfile.gql'
 import NEWSLETTER_INTEREST from '../../../graphql/getNewsletterInterest.gql'
+import NEWSLETTER_INTEREST_EMAIL from '../../../graphql/getNewsletterInterestEmail.gql'
 import UPDATE_NEWSLETTER_INTEREST from '../../../graphql/setNewsletterInterest.gql'
 import CREATEDOCUMENT from '../../../graphql/createDocument.gql'
 
@@ -15,16 +16,15 @@ import dataVariables from '../data/variables'
 const AccountPreferencesForm = () => {
   const [inputEdit, setInputEdit] = useState(false)
   const [fields, setFields] = useState(dataFields);
-
+  const [documentId, setDocumentId] = useState('');
   const { data: profileData } = useQuery(GET_PROFILE)
   const [updateNewsletter] = useMutation(UPDATE_NEWSLETTER_INTEREST)
   const { email } = pathOr([], ["profile"], profileData)
   const [createDocument] = useMutation(CREATEDOCUMENT)
 
-
-  const { data: newsletterInterest } = useQuery(NEWSLETTER_INTEREST, {
+  const { data: newsletterInterestEmail } = useQuery(NEWSLETTER_INTEREST_EMAIL, {
     variables: {
-      fields: dataVariables,
+      fields: 'id',
       acronym: "NS",
       where: `email=${email}`
     }
@@ -32,9 +32,56 @@ const AccountPreferencesForm = () => {
   )
 
   useEffect(() => {
+    if(newsletterInterestEmail && newsletterInterestEmail?.documents[0]?.fields[0]?.value && newsletterInterestEmail?.documents[0]?.fields[0]?.value !== "undefined"){
+      setDocumentId(newsletterInterestEmail?.documents[0]?.fields[0]?.value)
+      if(typeof localStorage !== "undefined"){
+        try{
+            localStorage?.setItem("documentIdNewsletter", newsletterInterestEmail?.documents[0]?.fields[0]?.value);
+        }catch(error){
+            console.log("** ", error);
+        }
+      }
+    } else {
+      let documentIdNewsletter:any
+      if(typeof localStorage !== "undefined"){
+        try{
+            documentIdNewsletter = localStorage?.getItem('documentIdNewsletter');
+        }catch(error){
+            console.log("Error");
+        }
+
+        if(!documentIdNewsletter && documentId && documentId !== ""){
+          if(typeof localStorage !== "undefined"){
+            try{
+                localStorage?.setItem("documentIdNewsletter", documentId);
+            }catch(error){
+                console.log("** ", error);
+            }
+          }
+        } else {
+          setDocumentId(documentIdNewsletter)
+        }
+      }
+    }
+  }, [documentId, newsletterInterestEmail])
+
+  const { data: newsletterInterest } = useQuery(NEWSLETTER_INTEREST, {
+    variables: {
+      fields: dataVariables,
+      acronym: "NS",
+      id: documentId
+    }
+  }
+  )
+
+  const [getInterest] = useLazyQuery(NEWSLETTER_INTEREST, {
+    fetchPolicy: 'network-only'
+  })
+
+  useEffect(() => {
     if (newsletterInterest) {
       try{
-        if(newsletterInterest.documents[0].fields !== undefined){
+        if(newsletterInterest.document?.fields !== undefined){
           setInputEdit(true)
         } else {
           setInputEdit(false)
@@ -45,7 +92,7 @@ const AccountPreferencesForm = () => {
 
       if (inputEdit) {
         const returnValues:any = []
-        newsletterInterest.documents[0].fields.map((e:any) => {
+        newsletterInterest.document?.fields.map((e:any) => {
           let value = e.value;
           if(value === 'null' || value === 'false'){
             value = false
@@ -110,7 +157,7 @@ const AccountPreferencesForm = () => {
   const editNewsletter = async (e:any) => {
     try {
       if(inputEdit){
-        updateNewsletter(
+        await updateNewsletter(
           {
             variables: {
               acronym: 'NS',
@@ -129,27 +176,48 @@ const AccountPreferencesForm = () => {
             }
           }
         )
+
+        getInterest({
+          variables: {
+            fields: dataVariables,
+            acronym: "NS",
+            id: documentId
+          }
+        })
+
       } else {
-        createDocument(
-          {
-            variables: {
-              acronym: 'NS',
-              document: {
-                fields: [
-                  {
-                    key: 'email',
-                    value: email,
-                  },
-                  {
-                    key : e.target.name,
-                    value : e.target.checked,
-                  }
-                ],
+        try{
+          const returnValueCreateDocument = await createDocument(
+            {
+              variables: {
+                acronym: 'NS',
+                document: {
+                  fields: [
+                    {
+                      key: 'email',
+                      value: email,
+                    },
+                    {
+                      key : e.target.name,
+                      value : e.target.checked,
+                    },
+                    {
+                      key: "receiveNewsletter",
+                      value: "true"
+                    }
+                  ],
+                }
               }
             }
-          }
-        )
-        // setInputEdit(true)
+          )
+
+          setDocumentId(returnValueCreateDocument.data.createDocument.documentId)
+
+        } catch(e){
+          console.error(e)
+        }
+
+        setInputEdit(true)
       }
     }
     catch (error) {

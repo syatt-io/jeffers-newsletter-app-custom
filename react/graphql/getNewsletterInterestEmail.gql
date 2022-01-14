@@ -1,12 +1,12 @@
-query getNewsletterInterest(
+query getNewsletterInterestEmail(
   $acronym: String
   $fields: [String]
-  $id: String
+  $where: String
 ) {
-  document(
+  documents(
     acronym: $acronym
     fields: $fields
-    id: $id
+    where: $where
   ) @context(provider: "vtex.store-graphql"){
     fields {
       key

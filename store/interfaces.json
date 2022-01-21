@@ -1,17 +1,22 @@
 {
   "newsletter-custom":{
-    "component": "NewsletterApp"
+    "component": "NewsletterApp",
+    "allowed" : "*"
   },
   "preference-message":{
-    "component": "PreferenceMessage"
+    "component": "PreferenceMessage",
+    "allowed" : "*"
   },
   "email-signup":{
-    "component": "EmailSignup"
+    "component": "EmailSignup",
+    "allowed" : "*"
   },
   "my-account-page.newsletter-preferences": {
-    "component": "NewsletterPreferences"
+    "component": "NewsletterPreferences",
+    "allowed" : "*"
   },
   "my-account-link.newsletter-preferences": {
-    "component": "LinkNewsletterPreferences"
+    "component": "LinkNewsletterPreferences",
+    "allowed" : "*"
   }
 }

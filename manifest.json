@@ -17,11 +17,21 @@
     "vtex.disclosure-layout": "1.x",
     "vtex.my-account": "1.x",
     "vtex.my-account-commons": "1.x",
-    "vtex.store-graphql": "2.x"
+    "vtex.store-graphql": "2.x",
+    "vtex.apps-graphql": "2.x"
   },
   "registries": [
     "smartcheckout"
   ],
-  "policies": [],
+  "policies": [
+    {
+      "name": "outbound-access",
+      "attrs": {
+        "host": "myvtex.com",
+        "path": "/_v/graphql/private/v1"
+      }
+    }
+  ],
+  "credentialType": "absolute",
   "$schema": "https://raw.githubusercontent.com/vtex/node-vtex-api/master/gen/manifest.schema"
 }

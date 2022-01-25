@@ -1,7 +1,7 @@
 {
   "vendor": "jefferspet",
   "name": "newsletter-app",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "title": "Newsletter App",
   "description": "Custom Newsletter App",
   "builders": {
@@ -27,7 +27,7 @@
     {
       "name": "outbound-access",
       "attrs": {
-        "host": "myvtex.com",
+        "host": "jefferspet.myvtex.com",
         "path": "/_v/graphql/private/v1"
       }
     }

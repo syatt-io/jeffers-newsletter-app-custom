@@ -8,7 +8,7 @@ import NEWSLETTER_INTEREST from '../../graphql/getNewsletterInterestEmail.gql'
 import UPDATE_NEWSLETTER_INTEREST from '../../graphql/setNewsletterInterest.gql'
 import CREATEDOCUMENT from '../../graphql/createDocument.gql'
 
-const SubmitData = ({email}:any) => {
+const SubmitData = ({ email }: any) => {
 
   const [fields, setFields] = useState(singupDataFields);
   const [existRegister, setExistRegister] = useState(false);
@@ -18,6 +18,7 @@ const SubmitData = ({email}:any) => {
   const [updateNewsletter] = useMutation(UPDATE_NEWSLETTER_INTEREST)
   const [createDocument] = useMutation(CREATEDOCUMENT)
   const { data: newsletterInterest } = useQuery(NEWSLETTER_INTEREST, {
+    fetchPolicy: 'no-cache',
     variables: {
       fields: 'id',
       acronym: "NS",
@@ -27,35 +28,35 @@ const SubmitData = ({email}:any) => {
   )
 
   const verificateEmail = () => {
-    if(newsletterInterest){
-      try{
-        if(newsletterInterest.documents[0].fields !== undefined){
+    if (newsletterInterest) {
+      try {
+        if (newsletterInterest.documents[0].fields !== undefined) {
           setExistRegister(true)
           setId(newsletterInterest.documents[0].fields[0].value)
         } else {
           setExistRegister(false)
         }
-      } catch(e){
+      } catch (e) {
         console.log('error', e)
       }
     }
   }
 
   useEffect(() => {
-    let documentIdNewsletter:any
-    if(typeof localStorage !== "undefined"){
-      try{
-          documentIdNewsletter = localStorage?.getItem('documentIdNewsletter');
-      }catch(error){
-          console.log("Error");
+    let documentIdNewsletter: any
+    if (typeof localStorage !== "undefined") {
+      try {
+        documentIdNewsletter = localStorage?.getItem('documentIdNewsletter');
+      } catch (error) {
+        console.log("Error");
       }
 
-      if(!documentIdNewsletter && id && id !== ""){
-        if(typeof localStorage !== "undefined"){
-          try{
-              localStorage?.setItem("documentIdNewsletter", id);
-          }catch(error){
-              console.log("** ", error);
+      if (!documentIdNewsletter && id && id !== "") {
+        if (typeof localStorage !== "undefined") {
+          try {
+            localStorage?.setItem("documentIdNewsletter", id);
+          } catch (error) {
+            console.log("** ", error);
           }
         }
       }
@@ -70,19 +71,19 @@ const SubmitData = ({email}:any) => {
       ['email']: email
     })
     verificateEmail()
-  },[newsletterInterest])
+  }, [newsletterInterest])
 
-  const handleChange = (e:any) => {
+  const handleChange = (e: any) => {
     setFields({
       ...fields,
       [e.target.name]: e.target.checked
     })
   }
 
-  const onSubmit = async (e:any) => {
+  const onSubmit = async (e: any) => {
     e.preventDefault()
-    if(existRegister && id !== ''){
-      try{
+    if (existRegister && id !== '') {
+      try {
         updateNewsletter(
           {
             variables: {
@@ -90,144 +91,144 @@ const SubmitData = ({email}:any) => {
               document: {
                 fields: [
                   {
-                    key : 'id',
-                    value : id
+                    key: 'id',
+                    value: id
                   },
                   {
-                    key : "barrelRacingInterest",
-                    value : fields.barrelRacingInterest
+                    key: "barrelRacingInterest",
+                    value: fields.barrelRacingInterest
                   },
                   {
-                    key :"birdInterest",
-                    value : fields.birdInterest
+                    key: "birdInterest",
+                    value: fields.birdInterest
                   },
                   {
-                    key :"catInterest",
-                    value : fields.catInterest
+                    key: "catInterest",
+                    value: fields.catInterest
                   },
                   {
-                    key :"cattleInterest",
-                    value : fields.cattleInterest
+                    key: "cattleInterest",
+                    value: fields.cattleInterest
                   },
                   {
-                    key :"cowboyMountedShootingInterest",
-                    value : fields.cowboyMountedShootingInterest
+                    key: "cowboyMountedShootingInterest",
+                    value: fields.cowboyMountedShootingInterest
                   },
                   {
-                    key :"deerInterest",
-                    value : fields.deerInterest
+                    key: "deerInterest",
+                    value: fields.deerInterest
                   },
                   {
-                    key :"dogInterest",
-                    value : fields.dogInterest
+                    key: "dogInterest",
+                    value: fields.dogInterest
                   },
                   {
-                    key :"draftInterest",
-                    value : fields.draftInterest
+                    key: "draftInterest",
+                    value: fields.draftInterest
                   },
                   {
-                    key :"dressageInterest",
-                    value : fields.dressageInterest
+                    key: "dressageInterest",
+                    value: fields.dressageInterest
                   },
                   {
-                    key :"equineInterest",
-                    value : fields.equineInterest
+                    key: "equineInterest",
+                    value: fields.equineInterest
                   },
                   {
-                    key :"eventingInterest",
-                    value : fields.eventingInterest
+                    key: "eventingInterest",
+                    value: fields.eventingInterest
                   },
                   {
-                    key :"exoticInterest",
-                    value : fields.exoticInterest
+                    key: "exoticInterest",
+                    value: fields.exoticInterest
                   },
                   {
-                    key :"ferretInterest",
-                    value : fields.ferretInterest
+                    key: "ferretInterest",
+                    value: fields.ferretInterest
                   },
                   {
-                    key :"goatInterest",
-                    value : fields.goatInterest
+                    key: "goatInterest",
+                    value: fields.goatInterest
                   },
                   {
-                    key :"horseEnglishInterest",
-                    value : fields.horseEnglishInterest
+                    key: "horseEnglishInterest",
+                    value: fields.horseEnglishInterest
                   },
                   {
-                    key :"horseWesternInterest",
-                    value : fields.horseWesternInterest
+                    key: "horseWesternInterest",
+                    value: fields.horseWesternInterest
                   },
                   {
-                    key :"hunterJumperInterest",
-                    value : fields.hunterJumperInterest
+                    key: "hunterJumperInterest",
+                    value: fields.hunterJumperInterest
                   },
                   {
-                    key :"livestockInterest",
-                    value : fields.livestockInterest
+                    key: "livestockInterest",
+                    value: fields.livestockInterest
                   },
                   {
-                    key :"llamasAlpacasInterest",
-                    value : fields.llamasAlpacasInterest
+                    key: "llamasAlpacasInterest",
+                    value: fields.llamasAlpacasInterest
                   },
                   {
-                    key :"miniatureInterest",
-                    value : fields.miniatureInterest
+                    key: "miniatureInterest",
+                    value: fields.miniatureInterest
                   },
                   {
-                    key :"otherHorseEnglishInterest",
-                    value : fields.otherHorseEnglishInterest
+                    key: "otherHorseEnglishInterest",
+                    value: fields.otherHorseEnglishInterest
                   },
                   {
-                    key :"otherHorseWesternInterest",
-                    value : fields.otherHorseWesternInterest
+                    key: "otherHorseWesternInterest",
+                    value: fields.otherHorseWesternInterest
                   },
                   {
-                    key :"petInterest",
-                    value : fields.petInterest
+                    key: "petInterest",
+                    value: fields.petInterest
                   },
                   {
-                    key :"pleasureInterest",
-                    value : fields.pleasureInterest
+                    key: "pleasureInterest",
+                    value: fields.pleasureInterest
                   },
                   {
-                    key :"ponyClubInterest",
-                    value : fields.ponyClubInterest
+                    key: "ponyClubInterest",
+                    value: fields.ponyClubInterest
                   },
                   {
-                    key :"potBelliedPigInterest",
-                    value : fields.potBelliedPigInterest
+                    key: "potBelliedPigInterest",
+                    value: fields.potBelliedPigInterest
                   },
                   {
-                    key :"poultryInterest",
-                    value : fields.poultryInterest
+                    key: "poultryInterest",
+                    value: fields.poultryInterest
                   },
                   {
-                    key :"rabbitInterest",
-                    value : fields.rabbitInterest
+                    key: "rabbitInterest",
+                    value: fields.rabbitInterest
                   },
                   {
-                    key :"receiveNewsletter",
-                    value : true
+                    key: "receiveNewsletter",
+                    value: true
                   },
                   {
-                    key :"sheepInterest",
-                    value : fields.sheepInterest
+                    key: "sheepInterest",
+                    value: fields.sheepInterest
                   },
                   {
-                    key :"swineInterest",
-                    value : fields.swineInterest
+                    key: "swineInterest",
+                    value: fields.swineInterest
                   },
                   {
-                    key :"trailInterest",
-                    value : fields.trailInterest
+                    key: "trailInterest",
+                    value: fields.trailInterest
                   },
                   {
-                    key :"westernPleasureInterest",
-                    value : fields.westernPleasureInterest
+                    key: "westernPleasureInterest",
+                    value: fields.westernPleasureInterest
                   },
                   {
-                    key :"wildlifeInterest",
-                    value : fields.wildlifeInterest
+                    key: "wildlifeInterest",
+                    value: fields.wildlifeInterest
                   }
                 ],
               }
@@ -235,7 +236,7 @@ const SubmitData = ({email}:any) => {
           }
         )
         useShowMessage(true)
-      } catch (e){
+      } catch (e) {
         console.log('error', e)
       }
     } else {
@@ -251,140 +252,140 @@ const SubmitData = ({email}:any) => {
                     value: email,
                   },
                   {
-                    key : "barrelRacingInterest",
-                    value : fields.barrelRacingInterest
+                    key: "barrelRacingInterest",
+                    value: fields.barrelRacingInterest
                   },
                   {
-                    key :"birdInterest",
-                    value : fields.birdInterest
+                    key: "birdInterest",
+                    value: fields.birdInterest
                   },
                   {
-                    key :"catInterest",
-                    value : fields.catInterest
+                    key: "catInterest",
+                    value: fields.catInterest
                   },
                   {
-                    key :"cattleInterest",
-                    value : fields.cattleInterest
+                    key: "cattleInterest",
+                    value: fields.cattleInterest
                   },
                   {
-                    key :"cowboyMountedShootingInterest",
-                    value : fields.cowboyMountedShootingInterest
+                    key: "cowboyMountedShootingInterest",
+                    value: fields.cowboyMountedShootingInterest
                   },
                   {
-                    key :"deerInterest",
-                    value : fields.deerInterest
+                    key: "deerInterest",
+                    value: fields.deerInterest
                   },
                   {
-                    key :"dogInterest",
-                    value : fields.dogInterest
+                    key: "dogInterest",
+                    value: fields.dogInterest
                   },
                   {
-                    key :"draftInterest",
-                    value : fields.draftInterest
+                    key: "draftInterest",
+                    value: fields.draftInterest
                   },
                   {
-                    key :"dressageInterest",
-                    value : fields.dressageInterest
+                    key: "dressageInterest",
+                    value: fields.dressageInterest
                   },
                   {
-                    key :"equineInterest",
-                    value : fields.equineInterest
+                    key: "equineInterest",
+                    value: fields.equineInterest
                   },
                   {
-                    key :"eventingInterest",
-                    value : fields.eventingInterest
+                    key: "eventingInterest",
+                    value: fields.eventingInterest
                   },
                   {
-                    key :"exoticInterest",
-                    value : fields.exoticInterest
+                    key: "exoticInterest",
+                    value: fields.exoticInterest
                   },
                   {
-                    key :"ferretInterest",
-                    value : fields.ferretInterest
+                    key: "ferretInterest",
+                    value: fields.ferretInterest
                   },
                   {
-                    key :"goatInterest",
-                    value : fields.goatInterest
+                    key: "goatInterest",
+                    value: fields.goatInterest
                   },
                   {
-                    key :"horseEnglishInterest",
-                    value : fields.horseEnglishInterest
+                    key: "horseEnglishInterest",
+                    value: fields.horseEnglishInterest
                   },
                   {
-                    key :"horseWesternInterest",
-                    value : fields.horseWesternInterest
+                    key: "horseWesternInterest",
+                    value: fields.horseWesternInterest
                   },
                   {
-                    key :"hunterJumperInterest",
-                    value : fields.hunterJumperInterest
+                    key: "hunterJumperInterest",
+                    value: fields.hunterJumperInterest
                   },
                   {
-                    key :"livestockInterest",
-                    value : fields.livestockInterest
+                    key: "livestockInterest",
+                    value: fields.livestockInterest
                   },
                   {
-                    key :"llamasAlpacasInterest",
-                    value : fields.llamasAlpacasInterest
+                    key: "llamasAlpacasInterest",
+                    value: fields.llamasAlpacasInterest
                   },
                   {
-                    key :"miniatureInterest",
-                    value : fields.miniatureInterest
+                    key: "miniatureInterest",
+                    value: fields.miniatureInterest
                   },
                   {
-                    key :"otherHorseEnglishInterest",
-                    value : fields.otherHorseEnglishInterest
+                    key: "otherHorseEnglishInterest",
+                    value: fields.otherHorseEnglishInterest
                   },
                   {
-                    key :"otherHorseWesternInterest",
-                    value : fields.otherHorseWesternInterest
+                    key: "otherHorseWesternInterest",
+                    value: fields.otherHorseWesternInterest
                   },
                   {
-                    key :"petInterest",
-                    value : fields.petInterest
+                    key: "petInterest",
+                    value: fields.petInterest
                   },
                   {
-                    key :"pleasureInterest",
-                    value : fields.pleasureInterest
+                    key: "pleasureInterest",
+                    value: fields.pleasureInterest
                   },
                   {
-                    key :"ponyClubInterest",
-                    value : fields.ponyClubInterest
+                    key: "ponyClubInterest",
+                    value: fields.ponyClubInterest
                   },
                   {
-                    key :"potBelliedPigInterest",
-                    value : fields.potBelliedPigInterest
+                    key: "potBelliedPigInterest",
+                    value: fields.potBelliedPigInterest
                   },
                   {
-                    key :"poultryInterest",
-                    value : fields.poultryInterest
+                    key: "poultryInterest",
+                    value: fields.poultryInterest
                   },
                   {
-                    key :"rabbitInterest",
-                    value : fields.rabbitInterest
+                    key: "rabbitInterest",
+                    value: fields.rabbitInterest
                   },
                   {
-                    key :"receiveNewsletter",
-                    value : true
+                    key: "receiveNewsletter",
+                    value: true
                   },
                   {
-                    key :"sheepInterest",
-                    value : fields.sheepInterest
+                    key: "sheepInterest",
+                    value: fields.sheepInterest
                   },
                   {
-                    key :"swineInterest",
-                    value : fields.swineInterest
+                    key: "swineInterest",
+                    value: fields.swineInterest
                   },
                   {
-                    key :"trailInterest",
-                    value : fields.trailInterest
+                    key: "trailInterest",
+                    value: fields.trailInterest
                   },
                   {
-                    key :"westernPleasureInterest",
-                    value : fields.westernPleasureInterest
+                    key: "westernPleasureInterest",
+                    value: fields.westernPleasureInterest
                   },
                   {
-                    key :"wildlifeInterest",
-                    value : fields.wildlifeInterest
+                    key: "wildlifeInterest",
+                    value: fields.wildlifeInterest
                   }
                 ],
               }
@@ -399,14 +400,14 @@ const SubmitData = ({email}:any) => {
     }
   }
 
-  return(
+  return (
     <>
-    {
-      !showMessage ?
-      <PreferencesForm email={email} onSubmit={onSubmit} handleChange={handleChange} />
-      :
-      <MessageSent/>
-    }
+      {
+        !showMessage ?
+          <PreferencesForm email={email} onSubmit={onSubmit} handleChange={handleChange} />
+          :
+          <MessageSent />
+      }
     </>
   )
 }

@@ -23,6 +23,7 @@ const AccountPreferencesForm = () => {
   const [createDocument] = useMutation(CREATEDOCUMENT)
 
   const { data: newsletterInterestEmail } = useQuery(NEWSLETTER_INTEREST_EMAIL, {
+    fetchPolicy: 'no-cache',
     variables: {
       fields: 'id',
       acronym: "NS",
@@ -32,30 +33,30 @@ const AccountPreferencesForm = () => {
   )
 
   useEffect(() => {
-    if(newsletterInterestEmail && newsletterInterestEmail?.documents[0]?.fields[0]?.value && newsletterInterestEmail?.documents[0]?.fields[0]?.value !== "undefined"){
+    if (newsletterInterestEmail && newsletterInterestEmail?.documents[0]?.fields[0]?.value && newsletterInterestEmail?.documents[0]?.fields[0]?.value !== "undefined") {
       setDocumentId(newsletterInterestEmail?.documents[0]?.fields[0]?.value)
-      if(typeof localStorage !== "undefined"){
-        try{
-            localStorage?.setItem("documentIdNewsletter", newsletterInterestEmail?.documents[0]?.fields[0]?.value);
-        }catch(error){
-            console.log("** ", error);
+      if (typeof localStorage !== "undefined") {
+        try {
+          localStorage?.setItem("documentIdNewsletter", newsletterInterestEmail?.documents[0]?.fields[0]?.value);
+        } catch (error) {
+          console.log("** ", error);
         }
       }
     } else {
-      let documentIdNewsletter:any
-      if(typeof localStorage !== "undefined"){
-        try{
-            documentIdNewsletter = localStorage?.getItem('documentIdNewsletter');
-        }catch(error){
-            console.log("Error");
+      let documentIdNewsletter: any
+      if (typeof localStorage !== "undefined") {
+        try {
+          documentIdNewsletter = localStorage?.getItem('documentIdNewsletter');
+        } catch (error) {
+          console.log("Error");
         }
 
-        if(!documentIdNewsletter && documentId && documentId !== ""){
-          if(typeof localStorage !== "undefined"){
-            try{
-                localStorage?.setItem("documentIdNewsletter", documentId);
-            }catch(error){
-                console.log("** ", error);
+        if (!documentIdNewsletter && documentId && documentId !== "") {
+          if (typeof localStorage !== "undefined") {
+            try {
+              localStorage?.setItem("documentIdNewsletter", documentId);
+            } catch (error) {
+              console.log("** ", error);
             }
           }
         } else {
@@ -66,6 +67,7 @@ const AccountPreferencesForm = () => {
   }, [documentId, newsletterInterestEmail])
 
   const { data: newsletterInterest } = useQuery(NEWSLETTER_INTEREST, {
+    fetchPolicy: 'no-cache',
     variables: {
       fields: dataVariables,
       acronym: "NS",
@@ -75,26 +77,26 @@ const AccountPreferencesForm = () => {
   )
 
   const [getInterest] = useLazyQuery(NEWSLETTER_INTEREST, {
-    fetchPolicy: 'network-only'
+    fetchPolicy: 'no-cache'
   })
 
   useEffect(() => {
     if (newsletterInterest) {
-      try{
-        if(newsletterInterest.document?.fields !== undefined){
+      try {
+        if (newsletterInterest.document?.fields !== undefined) {
           setInputEdit(true)
         } else {
           setInputEdit(false)
         }
-      } catch (e){
+      } catch (e) {
         console.log('error', e)
       }
 
       if (inputEdit) {
-        const returnValues:any = []
-        newsletterInterest.document?.fields.map((e:any) => {
+        const returnValues: any = []
+        newsletterInterest.document?.fields.map((e: any) => {
           let value = e.value;
-          if(value === 'null' || value === 'false'){
+          if (value === 'null' || value === 'false') {
             value = false
             returnValues.push(value)
           } else if (value === 'true') {
@@ -138,15 +140,15 @@ const AccountPreferencesForm = () => {
           "swineInterest": returnValues[30],
           "trailInterest": returnValues[31],
           "westernPleasureInterest": returnValues[32],
-          "wildlifeInterest" : returnValues[33],
-          "id" : returnValues[34],
+          "wildlifeInterest": returnValues[33],
+          "id": returnValues[34],
         }
         setFields(initalFields)
       }
     }
   }, [newsletterInterest, inputEdit])
 
-  const setNewValues = (e:any) => {
+  const setNewValues = (e: any) => {
     e.preventDefault()
     setFields({
       ...fields,
@@ -154,9 +156,9 @@ const AccountPreferencesForm = () => {
     })
   }
 
-  const editNewsletter = async (e:any) => {
+  const editNewsletter = async (e: any) => {
     try {
-      if(inputEdit){
+      if (inputEdit) {
         await updateNewsletter(
           {
             variables: {
@@ -164,12 +166,12 @@ const AccountPreferencesForm = () => {
               document: {
                 fields: [
                   {
-                    key : 'id',
-                    value : fields.id
+                    key: 'id',
+                    value: fields.id
                   },
                   {
-                    key : e.target.name,
-                    value : e.target.checked
+                    key: e.target.name,
+                    value: e.target.checked
                   }
                 ],
               }
@@ -186,7 +188,7 @@ const AccountPreferencesForm = () => {
         })
 
       } else {
-        try{
+        try {
           const returnValueCreateDocument = await createDocument(
             {
               variables: {
@@ -198,8 +200,8 @@ const AccountPreferencesForm = () => {
                       value: email,
                     },
                     {
-                      key : e.target.name,
-                      value : e.target.checked,
+                      key: e.target.name,
+                      value: e.target.checked,
                     },
                     {
                       key: "receiveNewsletter",
@@ -213,7 +215,7 @@ const AccountPreferencesForm = () => {
 
           setDocumentId(returnValueCreateDocument.data.createDocument.documentId)
 
-        } catch(e){
+        } catch (e) {
           console.error(e)
         }
 
@@ -225,19 +227,19 @@ const AccountPreferencesForm = () => {
     }
   }
 
-  const handleChange = (e:any) => {
+  const handleChange = (e: any) => {
     setNewValues(e)
     editNewsletter(e)
   }
 
-  return(
+  return (
     <>
-    {
-      profileData ?
-      <PreferencesForm handleChange={handleChange} fields={fields}/>
-      :
-      <ProfileLoading />
-    }
+      {
+        profileData ?
+          <PreferencesForm handleChange={handleChange} fields={fields} />
+          :
+          <ProfileLoading />
+      }
     </>
   )
 }

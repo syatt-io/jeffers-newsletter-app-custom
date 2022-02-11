@@ -1,16 +1,20 @@
 query getNewsletterInterest(
   $acronym: String
   $fields: [String]
-  $id: String
+  $where: String
+  $isExternal: Boolean
 ) {
-  document(
+  DocumentsNoCache(
     acronym: $acronym
     fields: $fields
-    id: $id
-  ) @context(provider: "vtex.store-graphql"){
-    fields {
-      key
-      value
+    where: $where
+    isExternal: $isExternal
+  ) @context(provider: "itglobers.graphql-master-data"){
+    documents{
+      fields{
+        key
+        value
+      }
     }
   }
 }

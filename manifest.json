@@ -20,6 +20,9 @@
     "vtex.store-graphql": "2.x",
     "vtex.apps-graphql": "2.x"
   },
+  "peerDependencies": {
+    "itglobers.graphql-master-data": "1.x"
+  },
   "registries": [
     "smartcheckout"
   ],

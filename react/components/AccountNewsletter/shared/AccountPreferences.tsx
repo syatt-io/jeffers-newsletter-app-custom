@@ -71,7 +71,8 @@ const AccountPreferencesForm = () => {
     variables: {
       fields: dataVariables,
       acronym: "NS",
-      id: documentId
+      isExternal: false,
+      where: `id=${documentId}`
     }
   }
   )
@@ -83,7 +84,7 @@ const AccountPreferencesForm = () => {
   useEffect(() => {
     if (newsletterInterest) {
       try {
-        if (newsletterInterest.document?.fields !== undefined) {
+        if (newsletterInterest.DocumentsNoCache?.documents[0]?.fields !== undefined) {
           setInputEdit(true)
         } else {
           setInputEdit(false)
@@ -94,7 +95,7 @@ const AccountPreferencesForm = () => {
 
       if (inputEdit) {
         const returnValues: any = []
-        newsletterInterest.document?.fields.map((e: any) => {
+        newsletterInterest.DocumentsNoCache?.documents[0]?.fields.map((e: any) => {
           let value = e.value;
           if (value === 'null' || value === 'false') {
             value = false
@@ -183,7 +184,8 @@ const AccountPreferencesForm = () => {
           variables: {
             fields: dataVariables,
             acronym: "NS",
-            id: documentId
+            isExternal: false,
+            where: `id=${documentId}`
           }
         })
 
